@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card fade-in">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">قائمة الطلاب</h5>
+        <a href="{{ url_for('students.add_student') }}" class="btn btn-primary btn-sm">
+            <i class="fas fa-plus"></i> إضافة طالب جديد
+        </a>
+    </div>
+    <div class="card-body">
+        <!-- Search Bar -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <input type="text" id="searchInput" class="form-control" placeholder="بحث عن طالب...">
+                    <span class="input-group-text">
+                        <i class="fas fa-search"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-6 text-end">
+                <button class="btn btn-outline-primary" onclick="exportToExcel()">
+                    <i class="fas fa-file-excel"></i> تصدير إلى Excel
+                </button>
+            </div>
+        </div>
+
+        <!-- Students Table -->
+        <div class="table-responsive">
+            <table class="table table-hover" id="studentsTable">
+                <thead>
+                    <tr>
+                        <th>الرقم الجامعي</th>
+                        <th>الاسم</th>
+                        <th>التخصص</th>
+                        <th>المعدل التراكمي</th>
+                        <th>الحالة</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ student.student_id }}</td>
+                        <td>{{ student.first_name }} {{ student.last_name }}</td>
+                        <td>{{ student.major }}</td>
+                        <td>{{ "%.2f"|format(student.gpa) }}</td>
+                        <td>
+                            <span class="badge bg-{{ 'success' if student.is_active else 'secondary' }}">
+                                {{ "نشط" if student.is_active else "غير نشط" }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{{ url_for('students.view_student', student_id=student.id) }}" 
+                                   class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="عرض">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ url_for('students.edit_student', student_id=student.id) }}" 
+                                   class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="تعديل">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button onclick="confirmDelete('{{ student.id }}')" 
+                                        class="btn btn-sm btn-danger" data-bs-toggle="tooltip" title="حذف">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if pages > 1 %}
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item {{ 'disabled' if page == 1 }}">
+                    <a class="page-link" href="{{ url_for('students.list_students', page=page-1) if page > 1 }}">السابق</a>
+                </li>
+                {% for p in range(1, pages + 1) %}
+                <li class="page-item {{ 'active' if p == page }}">
+                    <a class="page-link" href="{{ url_for('students.list_students', page=p) }}">{{ p }}</a>
+                </li>
+                {% endfor %}
+                <li class="page-item {{ 'disabled' if page == pages }}">
+                    <a class="page-link" href="{{ url_for('students.list_students', page=page+1) if page < pages }}">التالي</a>
+                </li>
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// تهيئة البحث
+document.addEventListener('DOMContentLoaded', function() {
+    initializeSearch('searchInput', 'studentsTable');
+});
+
+// تأكيد الحذف
+function confirmDelete(studentId) {
+    if (confirm('هل أنت متأكد من حذف هذا الطالب؟')) {
+        window.location.href = `/students/delete/${studentId}`;
+    }
+}
+
+// تصدير إلى Excel
+function exportToExcel() {
+    window.location.href = "{{ url_for('students.export_excel') }}";
+}
+</script>
+{% endblock %}

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - أعلمني</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+        }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 1rem 0;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-link {
+            color: white !important;
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 1rem;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .btn {
+            border-radius: 30px;
+            padding: 8px 20px;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .stats-card {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .stats-card i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+        }
+
+        .stats-card h3 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+
+        .stats-card p {
+            color: #666;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">أعلمني</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">الرئيسية</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#students">الطلاب</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">تسجيل الخروج</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card stats-card">
+                    <i class="fas fa-users"></i>
+                    <h3>150</h3>
+                    <p>إجمالي الطلاب</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stats-card">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h3>5</h3>
+                    <p>التخصصات</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stats-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>85%</h3>
+                    <p>نسبة النجاح</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4" id="students">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">قائمة الطلاب</h5>
+                <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addStudentModal" onclick="addStudent()">
+                    <i class="fas fa-plus"></i> إضافة طالب
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table" id="studentsTable">
+                        <thead>
+                            <tr>
+                                <th>الرقم الجامعي</th>
+                                <th>الاسم</th>
+                                <th>التخصص</th>
+                                <th>المعدل</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>20230001</td>
+                                <td>أحمد محمد</td>
+                                <td>علوم الحاسوب</td>
+                                <td>3.75</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" onclick="editStudent(this)"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteStudent(this)"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>20230002</td>
+                                <td>سارة أحمد</td>
+                                <td>هندسة البرمجيات</td>
+                                <td>3.90</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" onclick="editStudent(this)"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteStudent(this)"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="addStudentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">إضافة طالب جديد</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="studentForm">
+                        <div class="mb-3">
+                            <label class="form-label">الرقم الجامعي</label>
+                            <input type="text" class="form-control" id="studentId" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">الاسم</label>
+                            <input type="text" class="form-control" id="studentName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">التخصص</label>
+                            <select class="form-control" id="studentMajor">
+                                <option>علوم الحاسوب</option>
+                                <option>هندسة البرمجيات</option>
+                                <option>نظم المعلومات</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">المعدل</label>
+                            <input type="number" step="0.01" class="form-control" id="studentGPA" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" onclick="saveStudent()">حفظ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let editingRow = null;
+
+        function addStudent() {
+            document.getElementById('studentForm').reset();
+            editingRow = null;
+            const modal = new bootstrap.Modal(document.getElementById('addStudentModal'));
+            modal.show();
+        }
+
+        function editStudent(button) {
+            editingRow = button.closest('tr');
+            const cells = editingRow.cells;
+            
+            document.getElementById('studentId').value = cells[0].textContent;
+            document.getElementById('studentName').value = cells[1].textContent;
+            document.getElementById('studentMajor').value = cells[2].textContent;
+            document.getElementById('studentGPA').value = cells[3].textContent;
+            
+            const modal = new bootstrap.Modal(document.getElementById('addStudentModal'));
+            modal.show();
+        }
+
+        function saveStudent() {
+            const studentId = document.getElementById('studentId').value;
+            const studentName = document.getElementById('studentName').value;
+            const studentMajor = document.getElementById('studentMajor').value;
+            const studentGPA = document.getElementById('studentGPA').value;
+
+            if (editingRow) {
+                // تحديث طالب موجود
+                editingRow.cells[0].textContent = studentId;
+                editingRow.cells[1].textContent = studentName;
+                editingRow.cells[2].textContent = studentMajor;
+                editingRow.cells[3].textContent = studentGPA;
+            } else {
+                // إضافة طالب جديد
+                const table = document.getElementById('studentsTable').getElementsByTagName('tbody')[0];
+                const newRow = table.insertRow();
+                newRow.innerHTML = `
+                    <td>${studentId}</td>
+                    <td>${studentName}</td>
+                    <td>${studentMajor}</td>
+                    <td>${studentGPA}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="editStudent(this)"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteStudent(this)"><i class="fas fa-trash"></i></button>
+                    </td>
+                `;
+            }
+
+            bootstrap.Modal.getInstance(document.getElementById('addStudentModal')).hide();
+            showAlert('تم حفظ بيانات الطالب بنجاح!', 'success');
+        }
+
+        function deleteStudent(button) {
+            if (confirm('هل أنت متأكد من حذف هذا الطالب؟')) {
+                button.closest('tr').remove();
+                showAlert('تم حذف الطالب بنجاح!', 'success');
+            }
+        }
+
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.container').firstChild);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 3000);
+        }
+
+        // تحديث الإحصائيات
+        function updateStats() {
+            const totalStudents = document.getElementById('studentsTable').getElementsByTagName('tbody')[0].rows.length;
+            document.querySelector('.stats-card h3').textContent = totalStudents;
+        }
+
+        // إضافة مستمع لتحديث الإحصائيات عند تغيير البيانات
+        ['saveStudent', 'deleteStudent'].forEach(function(func) {
+            const oldFunc = window[func];
+            window[func] = function() {
+                oldFunc.apply(this, arguments);
+                updateStats();
+            };
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row fade-in">
+    <!-- Welcome Section -->
+    <div class="col-12 mb-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body text-center py-5">
+                <h1 class="display-4 mb-3">مرحباً بك في نظام أعلمني</h1>
+                <p class="lead">نظام متكامل لإدارة ملفات الطلبة الجامعيين</p>
+                {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('auth.login') }}" class="btn btn-light btn-lg mt-3">
+                    <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {% if current_user.is_authenticated %}
+    <!-- Quick Stats -->
+    <div class="col-md-4 mb-4">
+        <div class="stats-card">
+            <div class="text-center">
+                <i class="fas fa-users"></i>
+                <h3>{{ total_students }}</h3>
+                <p>إجمالي الطلاب</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="stats-card">
+            <div class="text-center">
+                <i class="fas fa-user-graduate"></i>
+                <h3>{{ active_students }}</h3>
+                <p>الطلاب النشطين</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="stats-card">
+            <div class="text-center">
+                <i class="fas fa-book"></i>
+                <h3>{{ total_courses }}</h3>
+                <p>المقررات الدراسية</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">إجراءات سريعة</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3 col-6 mb-3">
+                        <a href="{{ url_for('students.add_student') }}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-user-plus mb-2"></i>
+                            <br>إضافة طالب
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <a href="{{ url_for('students.list_students') }}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-list mb-2"></i>
+                            <br>قائمة الطلاب
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <a href="#" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-file-export mb-2"></i>
+                            <br>تصدير البيانات
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <a href="#" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-chart-bar mb-2"></i>
+                            <br>التقارير
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activities -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">آخر النشاطات</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>النشاط</th>
+                                <th>المستخدم</th>
+                                <th>التاريخ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for activity in recent_activities %}
+                            <tr>
+                                <td>{{ activity.description }}</td>
+                                <td>{{ activity.user }}</td>
+                                <td>{{ activity.date }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <!-- Features Section -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                <h4>إدارة الطلاب</h4>
+                <p>إدارة سهلة وفعالة لبيانات وملفات الطلاب</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-line fa-3x text-primary mb-3"></i>
+                <h4>تتبع التقدم</h4>
+                <p>متابعة تقدم الطلاب وتحصيلهم الأكاديمي</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-file-alt fa-3x text-primary mb-3"></i>
+                <h4>التقارير</h4>
+                <p>إنشاء تقارير تفصيلية وإحصائيات</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Initialize any JavaScript functionality specific to the home page
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add any specific home page JavaScript here
+    });
+</script>
+{% endblock %}
